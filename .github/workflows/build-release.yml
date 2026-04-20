@@ -23,7 +23,7 @@ jobs:
       builddate: ${{ steps.generate-builddate.outputs.builddate }}
     steps:
       - name: "😄 Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "😆 Generate Matrix"
         id: generate-matrix
@@ -106,7 +106,7 @@ jobs:
 
       - name: "🚅 Cache ccache files"
         if: ${{ env.ccache == 'true' }}
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.ccache
