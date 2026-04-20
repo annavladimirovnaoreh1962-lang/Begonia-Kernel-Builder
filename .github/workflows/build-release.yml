@@ -227,7 +227,7 @@ jobs:
 
           BKB_BRANCH=kernel-4.14
 
-          git clone --recursive -j $(nproc) --branch $BKB_BRANCH https://gitlab.com/simonpunk/susfs4ksu BKB
+          git clone --recursive -j $(nproc) --branch $BKB_BRANCH github.com/cvnertnc/susfs4ksu-begonia-old BKB
 
       - name: "💉 APatch, SukiSU setup and [BACKPORT]: ptrace"
         id: apatch-sukisu-setup
