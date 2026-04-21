@@ -226,6 +226,13 @@ jobs:
           echo "PATH Variable: $PATH"
           make ${{ env.args }} ${{ env.DEFCONFIG_NAME }}
 
+      - name: "🔧 Enable KALLSYMS for APatch"
+        working-directory: ${{ env.KERNEL_NAME }}
+        run: |
+          echo "CONFIG_KALLSYMS=y" >> .config
+          echo "CONFIG_KALLSYMS_ALL=y" >> .config
+          make olddefconfig
+
       - name: "🎶 Build kernel"
         working-directory: ${{ env.KERNEL_NAME }}
         env:
