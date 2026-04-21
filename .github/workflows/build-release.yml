@@ -217,6 +217,13 @@ jobs:
           echo "ARCH=$ARCH" >> $GITHUB_OUTPUT
           echo "args=$args" >> $GITHUB_OUTPUT
 
+      - name: "🧹 Clean kernel source"
+        working-directory: ${{ env.KERNEL_NAME }}
+        run: |
+          make clean || true
+          make mrproper || true
+          rm -rf ${{ env.OUT_DIR }} || true
+
       - name: "👍 Make defconfig"
         working-directory: ${{ env.KERNEL_NAME }}
         env:
@@ -229,6 +236,8 @@ jobs:
       - name: "🔧 Enable KALLSYMS for APatch"
         working-directory: ${{ env.KERNEL_NAME }}
         run: |
+          sed -i '/CONFIG_KALLSYMS/d' .config
+          sed -i '/CONFIG_KALLSYMS_ALL/d' .config
           echo "CONFIG_KALLSYMS=y" >> .config
           echo "CONFIG_KALLSYMS_ALL=y" >> .config
           make olddefconfig
