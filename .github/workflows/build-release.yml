@@ -224,7 +224,7 @@ jobs:
           make mrproper || true
           rm -rf ${{ env.OUT_DIR }} || true
 
-      - name: "👍 Make defconfig"
+      - name: "👍 Make defconfig + Enable KALLSYMS"
         working-directory: ${{ env.KERNEL_NAME }}
         env:
           args: ${{ steps.generate-args.outputs.args }}
@@ -232,15 +232,16 @@ jobs:
         run: |
           echo "PATH Variable: $PATH"
           make ${{ env.args }} ${{ env.DEFCONFIG_NAME }}
-
-      - name: "🔧 Enable KALLSYMS for APatch"
-        working-directory: ${{ env.KERNEL_NAME }}
-        run: |
-          sed -i '/CONFIG_KALLSYMS/d' .config
-          sed -i '/CONFIG_KALLSYMS_ALL/d' .config
-          echo "CONFIG_KALLSYMS=y" >> .config
-          echo "CONFIG_KALLSYMS_ALL=y" >> .config
-          make olddefconfig
+          if [ -n "${{ env.OUT_DIR }}" ]; then
+            CONFIG_FILE="${{ env.OUT_DIR }}/.config"
+          else
+            CONFIG_FILE=".config"
+          fi
+          sed -i '/CONFIG_KALLSYMS/d' "$CONFIG_FILE"
+          sed -i '/CONFIG_KALLSYMS_ALL/d' "$CONFIG_FILE"
+          echo "CONFIG_KALLSYMS=y" >> "$CONFIG_FILE"
+          echo "CONFIG_KALLSYMS_ALL=y" >> "$CONFIG_FILE"
+          make ${{ env.args }} olddefconfig
 
       - name: "🎶 Build kernel"
         working-directory: ${{ env.KERNEL_NAME }}
